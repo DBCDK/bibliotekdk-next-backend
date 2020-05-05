@@ -1,0 +1,12 @@
+version: '3'
+services:
+  drupal8:
+    build: docker/www
+    ports: 
+      - 7070:80
+    restart: always
+  pg_db:
+    build: docker/db
+    restart: always
+
+
