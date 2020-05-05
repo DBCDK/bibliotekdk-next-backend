@@ -2,7 +2,7 @@
 # environment
 source .env
 # trusted_host_patterns
-sed -i "s/@DOMAIN@/$APACHE_SERVER_NAME/" $SETTINGS
+# sed -i "s/@DOMAIN@/$APACHE_SERVER_NAME/" $SETTINGS
 # database settings
 cd /var/www || return
 # Insert the database settings into settings.php.
