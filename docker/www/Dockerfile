@@ -24,7 +24,7 @@ WORKDIR /var/lib/jenkins/www
 
 RUN composer up --no-dev --with-dependencies
 # get secrets from private gitlab
-RUN git clone gitlab@gitlab.dbc.dk:d-scrum/d8/bibdk-backend.git && cd bibdk-backend && git checkout develop
+RUN git clone gitlab@gitlab.dbc.dk:d-scrum/d8/bibdk-backend.git && cd bibdk-backend && git checkout ${BRANCH}
 
 FROM docker.dbc.dk/dbc-apache-php7
 
