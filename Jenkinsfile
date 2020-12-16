@@ -37,6 +37,7 @@ pipeline {
         // Build the Drupal website image.
         stage('Docker www') {
             steps {
+                currentBuild.description = "Build ${BUILDNAME}:${currentBuild.number}"
                 dir('docker/www') {
                     script {
                         docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}",

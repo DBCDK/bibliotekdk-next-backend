@@ -24,7 +24,7 @@ WORKDIR /var/lib/jenkins/www
 
 RUN composer up --no-dev --with-dependencies
 # get secrets from private gitlab
-RUN git clone gitlab@gitlab.dbc.dk:d-scrum/d8/bibdk-backend.git && cd bibdk-backend && git checkout ${BRANCH}
+RUN git clone gitlab@gitlab.dbc.dk:d-scrum/d8/bibdk-backend.git && cd bibdk-backend && git checkout develop
 
 FROM docker.dbc.dk/dbc-apache-php7
 
@@ -33,7 +33,8 @@ ENV NAMESPACE=frontend-features \
     APACHE_RUN_DIR=/var/run/apache2 \
     APACHE_SERVER_NAME=bibdk-backend-www-${BRANCH}.${NAMESPACE}.svc.cloud.dbc.dk \
     MEMCACHED_SERVER=bibdk-backend-memcached-${BRANCH}.${NAMESPACE}.svc.cloud.dbc.dk \
-    URL_PATH=app
+    URL_PATH=app \
+    POSTGRES_HOST=bibdk-backend-db-${BRANCH}.frontend-features.svc.cloud.dbc.dk
 
 RUN apt-get update && \
 	apt-get -q -y install php-intl php-soap postgresql-client composer && \
