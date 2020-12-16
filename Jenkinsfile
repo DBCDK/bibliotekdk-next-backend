@@ -59,7 +59,6 @@ pipeline {
             }
         }
 
-        /*
         stage('Docker: push & cleanup') {
             steps {
                 script {
@@ -79,12 +78,9 @@ pipeline {
                     buildInfo_www.append buildInfo_db
                     artyServer.publishBuildInfo buildInfo_www
 
-
                 }
             }
         }
-
-         */
         stage('docker cleanup'){
             steps{
                 script{
