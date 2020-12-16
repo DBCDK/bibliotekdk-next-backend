@@ -76,6 +76,15 @@ pipeline {
                     buildInfo_www.append buildInfo_db
                     artyServer.publishBuildInfo buildInfo_www
 
+
+                }
+            }
+        }
+
+         */
+        stage('docker cleanup'){
+            steps{
+                script{
                     sh """
                     docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}
                     docker rmi ${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}
@@ -83,8 +92,6 @@ pipeline {
                 }
             }
         }
-
-         */
 
         stage('Deploy') {
             steps {
