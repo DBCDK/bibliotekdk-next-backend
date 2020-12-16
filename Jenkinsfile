@@ -89,7 +89,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh """ echo FISK """
-                sh """ $BRANCH_NAME """
+                sh """ echo $BRANCH_NAME """
             }
         }
     }
