@@ -20,7 +20,7 @@ pipeline {
         // branch name to use in build
         BRANCH = BRANCH_NAME.replaceAll('feature/', '').replaceAll('_', '-')
         // artifactory buildname
-        BUILDNAME = 'Bibdk-backend :: ' + BRANCH
+        BUILDNAME = "Bibdk-backend :: ${BRANCH}"
     }
     triggers {
         gitlab(
