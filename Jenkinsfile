@@ -1,26 +1,26 @@
 #! groovy
+@Library('pu-deploy')
 @Library('frontend-dscrum')
 
-// general vars
-def DOCKER_REPO = "docker-dscrum.dbc.dk"
-def PRODUCT = 'bibdk-backend'
-def BRANCH
-BRANCH = BRANCH_NAME.replaceAll('feature/', '')
-BRANCH = BRANCH.replaceAll('_', '-')
-
-// artifactory buildname
-def BUILDNAME = 'Bibdk-backend :: ' + BRANCH
+def fisk = "JE"
 
 pipeline {
-    agent {
-        node { label 'devel10-head' }
-    }
     options {
         buildDiscarder(logRotator(artifactDaysToKeepStr: "", artifactNumToKeepStr: "", daysToKeepStr: "", numToKeepStr: "5"))
         timestamps()
         gitLabConnection('gitlab.dbc.dk')
         // Limit concurrent builds to one pr. branch.
         disableConcurrentBuilds()
+    }
+    environment {
+        // general vars
+        DOCKER_REPO = "docker-dscrum.dbc.dk"
+        // product name
+        PRODUCT = 'bibdk-backend'
+        // branch name to use in build
+        BRANCH = BRANCH_NAME.replaceAll('feature/', '').replaceAll('_', '-')
+        // artifactory buildname
+        BUILDNAME = 'Bibdk-backend :: ' + BRANCH
     }
     triggers {
         gitlab(
@@ -29,6 +29,9 @@ pipeline {
                 branchFilterType: 'All',
                 addVoteOnMergeRequest: true
         )
+    }
+    agent {
+        node { label 'devel10-head' }
     }
     stages {
         // Build the Drupal website image.
@@ -53,6 +56,7 @@ pipeline {
             }
         }
 
+        /*
         stage('Docker: push & cleanup') {
             steps {
                 script {
@@ -80,12 +84,12 @@ pipeline {
             }
         }
 
+         */
+
         stage('Deploy') {
             steps {
-                script {
-                  sh """ echo FISK """
-
-                }
+                sh """ echo FISK """
+                sh """ $BRANC_NAME """
             }
         }
     }
