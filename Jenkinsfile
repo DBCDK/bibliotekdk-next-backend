@@ -96,6 +96,15 @@ pipeline {
             steps {
                 sh """ echo FISK """
                 sh """ echo $BRANCH_NAME """
+                script {
+                    if (BRANCH == 'develop') {
+                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop'
+                    } else if (BRANCH == 'master') {
+                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/staging'
+                    } else {
+                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop', parameters: [string(name: 'deploybranch', value: BRANCH)]
+                    }
+                }
             }
         }
     }
