@@ -5,6 +5,8 @@ services:
     ports: 
       - 7070:80
     restart: always
+    environment:
+      POSTGRES_HOST: pg_db
   pg_db:
     build: docker/db
     restart: always
