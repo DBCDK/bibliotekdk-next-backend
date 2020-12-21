@@ -58,10 +58,6 @@ pipeline {
                     script {
                         docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}",
                                 "--no-cache .")
-                        if (BRANCH == "develop"){
-                            docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:latest",
-                                    "--no-cache .")
-                        }
                     }
                 }
             }
@@ -86,6 +82,10 @@ pipeline {
                     buildInfo_www.append buildInfo_db
                     artyServer.publishBuildInfo buildInfo_www
 
+                    if (BRANCH == "develop"){
+                        artyDocker.push("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest", 'docker-dscrum')
+                    }
+
                 }
             }
         }
@@ -99,7 +99,6 @@ pipeline {
                     if (BRANCH == "develop"){
                         sh """
                         docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest
-                        docker rmi ${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:latest
                         """
                     }
                 }
