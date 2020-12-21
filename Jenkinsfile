@@ -59,7 +59,7 @@ pipeline {
                         docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}",
                                 "--no-cache .")
                         if (BRANCH == "develop"){
-                            docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:latest}",
+                            docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:latest",
                                     "--no-cache .")
                         }
                     }
