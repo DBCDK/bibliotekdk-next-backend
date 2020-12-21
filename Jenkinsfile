@@ -44,6 +44,10 @@ pipeline {
                     script {
                         docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}",
                                 "--build-arg BRANCH=${BRANCH_NAME} .")
+                        if (BRANCH == "develop"){
+                            docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest",
+                                    "--build-arg BRANCH=${BRANCH_NAME} .")
+                        }
                     }
                 }
             }
@@ -54,6 +58,10 @@ pipeline {
                     script {
                         docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}",
                                 "--no-cache .")
+                        if (BRANCH == "develop"){
+                            docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:latest}",
+                                    "--no-cache .")
+                        }
                     }
                 }
             }
@@ -88,6 +96,12 @@ pipeline {
                     docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}
                     docker rmi ${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}
                     """
+                    if (BRANCH == "develop"){
+                        sh """
+                        docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest
+                        docker rmi ${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:latest
+                        """
+                    }
                 }
             }
         }

@@ -1,12 +1,21 @@
 version: '3'
 services:
+  mount:
+    build: docker/www
   drupal8:
     build: docker/www
-    ports: 
+    ports:
       - 7070:80
     restart: always
     environment:
       POSTGRES_HOST: pg_db
+    command:
+      /bin/bash -c "cd /var/www/ && ls -la  && composer up && ./run_start.sh && ./entrypoint.sh"
+    depends_on:
+      - mount
+      - pg_db
+    volumes:
+      - ./www:/var/www/
   pg_db:
     build: docker/db
     restart: always
