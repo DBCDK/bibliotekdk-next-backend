@@ -1,1 +1,5 @@
 .idea
+www
+www
+!www/composer.json
+!www/composer.lock
