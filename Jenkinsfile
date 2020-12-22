@@ -40,7 +40,7 @@ pipeline {
                 script {
                     currentBuild.description = "Build ${BUILDNAME}:${currentBuild.number}"
                 }
-                dir('docker/www') {
+
                     script {
                         docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}",
                                 "--build-arg BRANCH=${BRANCH_NAME} .")
@@ -49,12 +49,12 @@ pipeline {
                                     "--build-arg BRANCH=${BRANCH_NAME} .")
                         }
                     }
-                }
+
             }
         }
         stage('Docker db') {
             steps {
-                dir('docker/db') {
+                dir('db') {
                     script {
                         docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}",
                                 "--no-cache .")
