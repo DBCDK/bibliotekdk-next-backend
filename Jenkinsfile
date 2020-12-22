@@ -1,26 +1,26 @@
 #! groovy
+@Library('pu-deploy')
 @Library('frontend-dscrum')
 
-// general vars
-def DOCKER_REPO = "docker-dscrum.dbc.dk"
-def PRODUCT = 'bibdk-backend'
-def BRANCH
-BRANCH = BRANCH_NAME.replaceAll('feature/', '')
-BRANCH = BRANCH.replaceAll('_', '-')
-
-// artifactory buildname
-def BUILDNAME = 'Bibdk-backend :: ' + BRANCH
+def fisk = "JE"
 
 pipeline {
-    agent {
-        node { label 'devel10-head' }
-    }
     options {
         buildDiscarder(logRotator(artifactDaysToKeepStr: "", artifactNumToKeepStr: "", daysToKeepStr: "", numToKeepStr: "5"))
         timestamps()
         gitLabConnection('gitlab.dbc.dk')
         // Limit concurrent builds to one pr. branch.
         disableConcurrentBuilds()
+    }
+    environment {
+        // general vars
+        DOCKER_REPO = "docker-dscrum.dbc.dk"
+        // product name
+        PRODUCT = 'bibdk-backend'
+        // branch name to use in build
+        BRANCH = BRANCH_NAME.replaceAll('feature/', '').replaceAll('_', '-')
+        // artifactory buildname
+        BUILDNAME = "Bibdk-backend :: ${BRANCH}"
     }
     triggers {
         gitlab(
@@ -30,21 +30,31 @@ pipeline {
                 addVoteOnMergeRequest: true
         )
     }
+    agent {
+        node { label 'devel10-head' }
+    }
     stages {
         // Build the Drupal website image.
         stage('Docker www') {
             steps {
-                dir('docker/www') {
+                script {
+                    currentBuild.description = "Build ${BUILDNAME}:${currentBuild.number}"
+                }
+
                     script {
                         docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}",
                                 "--build-arg BRANCH=${BRANCH_NAME} .")
+                        if (BRANCH == "develop"){
+                            docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest",
+                                    "--build-arg BRANCH=${BRANCH_NAME} .")
+                        }
                     }
-                }
+
             }
         }
         stage('Docker db') {
             steps {
-                dir('docker/db') {
+                dir('db') {
                     script {
                         docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}",
                                 "--no-cache .")
@@ -72,19 +82,41 @@ pipeline {
                     buildInfo_www.append buildInfo_db
                     artyServer.publishBuildInfo buildInfo_www
 
+                    if (BRANCH == "develop"){
+                        artyDocker.push("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest", 'docker-dscrum')
+                    }
+
+                }
+            }
+        }
+        stage('docker cleanup'){
+            steps{
+                script{
                     sh """
                     docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}
                     docker rmi ${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}
                     """
+                    if (BRANCH == "develop"){
+                        sh """
+                        docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest
+                        """
+                    }
                 }
             }
         }
 
         stage('Deploy') {
             steps {
+                sh """ echo FISK """
+                sh """ echo $BRANCH_NAME """
                 script {
-                  sh """ echo FISK """
-
+                    if (BRANCH == 'develop') {
+                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop'
+                    } else if (BRANCH == 'master') {
+                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/staging'
+                    } else {
+                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop', parameters: [string(name: 'deploybranch', value: BRANCH)]
+                    }
                 }
             }
         }

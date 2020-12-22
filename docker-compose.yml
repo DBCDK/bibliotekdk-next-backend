@@ -1,12 +1,22 @@
 version: '3'
 services:
   drupal8:
-    build: docker/www
-    ports: 
+    image: docker-dscrum.dbc.dk/bibdk-backend-www-develop
+    ports:
       - 7070:80
     restart: always
+    environment:
+      POSTGRES_HOST: pg_db
+    command:
+      /bin/bash -c ". /run_start.sh && . /entrypoint.sh"
+    depends_on:
+      - pg_db
+    volumes:
+      - ./www:/var/www
   pg_db:
-    build: docker/db
+    build: db
     restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
 
 
