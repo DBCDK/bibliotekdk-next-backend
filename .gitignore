@@ -1,3 +1,5 @@
 .idea
-web/
-docker/www
+www
+www
+!www/composer.json
+!www/composer.lock
