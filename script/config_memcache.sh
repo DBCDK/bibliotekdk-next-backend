@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-#SETTINGS=/var/www/web/sites/default/settings.php
-SETTINGS=fisk
+SETTINGS=/var/www/web/sites/default/settings.php
 # memcache settings
 MEMCACHE="$settings['memcache']['servers'] = ['bibdk-backend-memcached-master:11211' => 'default']; \
 $settings['memcache']['bins'] = ['default' => 'default']; \
