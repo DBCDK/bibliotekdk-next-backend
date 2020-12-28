@@ -51,6 +51,7 @@ COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/000-default.conf /et
 COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/settings.php /var/www/web/sites/default/
 COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/.env /
 ADD script/run_start.sh /
+ADD script/config_memcache.sh /
 
 RUN mkdir ${APACHE_ROOT}/sites/default/files
 RUN chown -R www-data:www-data /var/www/web
