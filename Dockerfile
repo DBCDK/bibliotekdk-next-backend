@@ -33,7 +33,6 @@ ENV NAMESPACE=frontend-features \
     APACHE_RUN_DIR=/var/run/apache2 \
     APACHE_SERVER_NAME=bibdk-backend-www-${BRANCH}.${NAMESPACE}.svc.cloud.dbc.dk \
     MEMCACHED_SERVER=bibdk-backend-memcached-${BRANCH}.${NAMESPACE}.svc.cloud.dbc.dk \
-    URL_PATH=app \
     POSTGRES_HOST=bibdk-backend-db-${BRANCH}.frontend-features.svc.cloud.dbc.dk
 
 RUN apt-get update && \
@@ -54,5 +53,5 @@ COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/.env /
 ADD script/run_start.sh /
 
 RUN mkdir ${APACHE_ROOT}/sites/default/files
-RUN chown -R www-data:www-data /var/www
+RUN chown -R www-data:www-data /var/www/web
 RUN chmod -R 775 ${APACHE_ROOT}/sites/default/files

@@ -14,4 +14,4 @@ docker-compose up -d
 # wait for database
 ./check_and_wait.sh "localhost:7070"
 # site is running - do some file permission and drush
-docker exec -it bibliotekdk-next-backend_drupal8_1 /bin/bash -c "chown -R www-data:www-data /var/www && cd /var/www/vendor/bin && php drush cr"
+docker exec -it bibliotekdk-next-backend_drupal8_1 /bin/bash -c "chown -R www-data:www-data /var/www/web  && cd /var/www/vendor/bin && php drush cr"
