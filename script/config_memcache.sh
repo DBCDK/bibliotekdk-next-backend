@@ -8,6 +8,5 @@ $settings['cache']['default'] = 'cache.backend.memcache'; \
 $settings['cache']['bins']['render'] = 'cache.backend.memcache';"
 
 echo $MEMCACHE
-echo $SETTINGS
 # sed -i "s/@DOMAIN@/$APACHE_SERVER_NAME/" $SETTINGS
 $MEMCACHE >> $SETTINGS
