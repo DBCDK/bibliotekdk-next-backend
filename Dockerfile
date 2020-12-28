@@ -54,5 +54,5 @@ COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/.env /
 ADD script/run_start.sh /
 
 RUN mkdir ${APACHE_ROOT}/sites/default/files
-RUN chown -R www-data:www-data /var/www
+RUN chown -R www-data:www-data /var/www/web
 RUN chmod -R 775 ${APACHE_ROOT}/sites/default/files
