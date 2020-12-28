@@ -63,7 +63,7 @@ pipeline {
             }
         }
 
-        stage('Docker: push & cleanup') {
+        stage('Docker: push') {
             steps {
                 script {
                     def artyServer = Artifactory.server 'arty'
