@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-SETTINGS=/var/www/web/sites/default/settings.php
+#SETTINGS=/var/www/web/sites/default/settings.php
+SETTINGS=fisk
 # memcache settings
 MEMCACHE="$settings['memcache']['servers'] = ['bibdk-backend-memcached-master:11211' => 'default']; \
 $settings['memcache']['bins'] = ['default' => 'default']; \
@@ -9,4 +10,4 @@ $settings['cache']['bins']['render'] = 'cache.backend.memcache';"
 
 echo $MEMCACHE
 # sed -i "s/@DOMAIN@/$APACHE_SERVER_NAME/" $SETTINGS
-$MEMCACHE >> $SETTINGS
+echo $MEMCACHE >> $SETTINGS
