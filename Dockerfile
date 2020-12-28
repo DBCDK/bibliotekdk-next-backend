@@ -33,7 +33,6 @@ ENV NAMESPACE=frontend-features \
     APACHE_RUN_DIR=/var/run/apache2 \
     APACHE_SERVER_NAME=bibdk-backend-www-${BRANCH}.${NAMESPACE}.svc.cloud.dbc.dk \
     MEMCACHED_SERVER=bibdk-backend-memcached-${BRANCH}.${NAMESPACE}.svc.cloud.dbc.dk \
-    URL_PATH=app \
     POSTGRES_HOST=bibdk-backend-db-${BRANCH}.frontend-features.svc.cloud.dbc.dk
 
 RUN apt-get update && \
