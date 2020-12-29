@@ -51,7 +51,8 @@ COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/000-default.conf /et
 COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/settings.php /var/www/web/sites/default/
 COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/.env /
 ADD --chown=www-data:www-data ["https://is.dbc.dk/view/frontend/job/bibliotekdk-next/job/Fetch%20bibdk-backend%20files/lastSuccessfulBuild/artifact/files.tar.gz", "/tmp/"]
-ADD script/run_start.sh /
+ADD script/run_dev_start.sh /
+ADD script/run_master_start.sh /
 ADD script/config_memcache.sh /
 
 RUN mkdir ${APACHE_ROOT}/sites/default/files
