@@ -15,6 +15,9 @@ pipeline {
         // Limit concurrent builds to one pr. branch.
         disableConcurrentBuilds()
     }
+    triggers {
+        cron('H 23 * * *')
+    }
     stages {
         stage('Fetch from k8s and archive it') {
             // use k8s-deploy-env docker agent - so we do not need to install kubectl
