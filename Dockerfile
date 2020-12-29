@@ -28,11 +28,11 @@ RUN git clone gitlab@gitlab.dbc.dk:d-scrum/d8/bibdk-backend.git && cd bibdk-back
 
 FROM docker.dbc.dk/dbc-apache-php7
 
-ENV NAMESPACE=frontend-features \
+ENV NAMESPACE_NAME=frontend-features \
     APACHE_ROOT=/var/www/web \
     APACHE_RUN_DIR=/var/run/apache2 \
-    APACHE_SERVER_NAME=bibdk-backend-www-${BRANCH}.${NAMESPACE}.svc.cloud.dbc.dk \
-    MEMCACHED_SERVER=bibdk-backend-memcached-${BRANCH}.${NAMESPACE}.svc.cloud.dbc.dk \
+    APACHE_SERVER_NAME=bibdk-backend-www-${BRANCH}.${NAMESPACE_NAME}.svc.cloud.dbc.dk \
+    MEMCACHED_SERVER=bibdk-backend-memcached-${BRANCH}.${NAMESPACE_NAME}.svc.cloud.dbc.dk \
     POSTGRES_HOST=bibdk-backend-db-${BRANCH}.frontend-features.svc.cloud.dbc.dk
 
 RUN apt-get update && \
@@ -50,6 +50,7 @@ COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/fqdn.conf /etc/apach
 COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/000-default.conf /etc/apache2/sites-enabled/
 COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/settings.php /var/www/web/sites/default/
 COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/.env /
+ADD --chown=www-data:www-data ["https://is.dbc.dk/view/frontend/job/bibliotekdk-next/job/Fetch%20bibdk-backend%20files/lastSuccessfulBuild/artifact/files.tar.gz", "/tmp/"]
 ADD script/run_start.sh /
 ADD script/config_memcache.sh /
 
