@@ -20,19 +20,16 @@ pipeline {
     }
     stages {
         stage('Fetch from k8s and archive it') {
-            // use k8s-deploy-env docker agent - so we do not need to install kubectl
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kubecert-frontend', variable: 'KUBECONFIG')]) {
-                        // The first rm command deletes folders in the files folder.
-                        // The second rm command deletes files that starts with a dot. But not .. and .
                         sh """
-            mkdir files
-            POD=\$(kubectl -n frontend-staging get pod -l app=bibdk-backend-www-master -o jsonpath="{.items[0].metadata.name}")
-            kubectl -n frontend-staging cp \${POD}:/var/www/web/sites/default/files files
-            tar zcf files.tar.gz files
-            rm -rf files
-            """
+                        mkdir files
+                        POD=\$(kubectl -n frontend-prod get pod -l app=bibdk-backend-www-master -o jsonpath="{.items[0].metadata.name}")
+                        kubectl -n frontend-prod cp \${POD}:/var/www/web/sites/default/files files
+                        tar zcf files.tar.gz files
+                        rm -rf files
+                        """
                     }
                 }
                 // Archive it so the deploy scripts can use it.

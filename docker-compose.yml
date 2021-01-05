@@ -9,7 +9,7 @@ services:
       POSTGRES_HOST: pg_db
       NAMESPACE_NAME: develop
     command:
-      /bin/bash -c ". /run_start.sh && . /entrypoint.sh"
+      /bin/bash -c ". /run_dev_start.sh && . /entrypoint.sh"
     depends_on:
       - pg_db
     volumes:
