@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "942f3c782d807588b2eee365e3858aca",
+    "content-hash": "406fe7ecc36c697aa82f771de7208afe",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -2418,6 +2418,21 @@
             "time": "2020-12-03T20:57:10+00:00"
         },
         {
+            "name": "drupal/export_translations",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "gitlab@gitlab.dbc.dk:d-scrum/d8/modules/export-translations",
+                "reference": "b06abe977f4561f814c82a276d0a0f45ce9915e8"
+            },
+            "type": "drupal-custom-module",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Insert and get translations from a json file.",
+            "time": "2021-01-15T12:21:32+00:00"
+        },
+        {
             "name": "drupal/graphql",
             "version": "3.1.0",
             "source": {
@@ -2472,6 +2487,60 @@
             "homepage": "http://drupal.org/project/graphql",
             "support": {
                 "source": "https://git.drupalcode.org/project/graphql"
+            }
+        },
+        {
+            "name": "drupal/log_stdout",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/log_stdout.git",
+                "reference": "8.x-1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/log_stdout-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "1493cd20b0a523a9dfa10bbe1510573a7c26fe44"
+            },
+            "require": {
+                "drupal/core": "~8.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.1",
+                    "datestamp": "1502196543",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Bohun Tak",
+                    "homepage": "https://www.drupal.org/user/1205098"
+                },
+                {
+                    "name": "mrhanlon",
+                    "homepage": "https://www.drupal.org/user/764624"
+                },
+                {
+                    "name": "singularo",
+                    "homepage": "https://www.drupal.org/user/143"
+                }
+            ],
+            "description": "This module provides an hook for Drupal Watchdog that directs log messages to php://stdout or php://stderr for better log handling with Docker.",
+            "homepage": "https://www.drupal.org/project/log_stdout",
+            "support": {
+                "source": "https://git.drupalcode.org/project/log_stdout",
+                "issues": "https://www.drupal.org/project/issues/log_stdout",
+                "irc": "irc://irc.freenode.org/drupal-support"
             }
         },
         {
@@ -6317,7 +6386,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "drupal/export_translations": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
