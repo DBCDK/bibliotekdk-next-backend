@@ -21,15 +21,17 @@
     "require": {
         "composer/installers": "^1.2",
         "drupal/console": "^1.0.2",
+        "drupal/core": "^8.9.2",
         "drupal/core-composer-scaffold": "^8.8",
         "drupal/core-project-message": "^8.8",
-        "drupal/core-recommended": "^8.8",
+        "drupal/core-recommended": "^8.9.2",
         "drupal/editor_absolute_image_url": "^1.0",
         "drupal/export_translations": "dev-master",
         "drupal/graphql": "^3.0",
         "drupal/log_stdout": "^1.1",
         "drupal/memcache": "^2.0",
-        "drush/drush": "^10.2"
+        "drush/drush": "^10.2",
+        "symfony/polyfill-php72": "^1.17"
     },
     "conflict": {
         "drupal/drupal": "*"
