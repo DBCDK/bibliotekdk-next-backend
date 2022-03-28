@@ -1,0 +1,65 @@
+#! groovy
+
+pipeline {
+    agent {
+        docker {
+            image "docker.dbc.dk/k8s-deploy-env:latest"
+            alwaysPull true
+            label 'devel9'
+        }
+    }
+    options {
+        buildDiscarder(logRotator(artifactDaysToKeepStr: "", artifactNumToKeepStr: "", daysToKeepStr: "", numToKeepStr: "5"))
+        timestamps()
+        gitLabConnection('gitlab.dbc.dk')
+        // Limit concurrent builds to one pr. branch.
+        disableConcurrentBuilds()
+    }
+    triggers {
+        cron('H 23 * * *')
+    }
+    stages {
+        stage('Fetch from k8s and archive it') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'kubecert-frontend', variable: 'KUBECONFIG')]) {
+                        sh """
+                        mkdir files
+                        POD=\$(kubectl -n frontend-prod get pod -l app=bibdk-backend-www-master -o jsonpath="{.items[0].metadata.name}")
+                        kubectl -n frontend-prod cp \${POD}:/var/www/web/sites/default/files files
+                        tar zcf files.tar.gz files
+                        rm -rf files
+                        """
+                    }
+                }
+                // Archive it so the deploy scripts can use it.
+                archiveArtifacts artifacts: 'files.tar.gz', onlyIfSuccessful: true
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'YAY'
+        }
+        failure {
+            // @TODO do something meaningfull
+            echo 'NAY'
+        }
+        always {
+            sh """
+        echo WORKSPACE: ${env.WORKSPACE}
+      """
+            cleanWs()
+            dir("${env.WORKSPACE}@2") {
+                deleteDir()
+            }
+            dir("${env.WORKSPACE}@2@tmp") {
+                deleteDir()
+            }
+            dir("${env.WORKSPACE}@tmp") {
+                deleteDir()
+            }
+        }
+    }
+}
