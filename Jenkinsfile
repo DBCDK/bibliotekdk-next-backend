@@ -2,7 +2,8 @@
 @Library('pu-deploy')
 @Library('frontend-dscrum')
 
-def fisk = "JE"
+def wwwImage
+def dbImage
 
 pipeline {
     options {
@@ -14,7 +15,7 @@ pipeline {
     }
     environment {
         // general vars
-        DOCKER_REPO = "docker-dscrum.dbc.dk"
+        DOCKER_REPO = "docker-frontend.artifacts.dbccloud.dk"
         // product name
         PRODUCT = 'bibdk-backend'
         // branch name to use in build
@@ -42,12 +43,12 @@ pipeline {
                 }
 
                     script {
-                        docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}",
+                        wwwImage = docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}",
                                 "--build-arg BRANCH=${BRANCH_NAME} .")
-                        if (BRANCH == "develop"){
+                        /*if (BRANCH == "develop"){
                             docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest",
                                     "--build-arg BRANCH=${BRANCH_NAME} .")
-                        }
+                        }*/
                     }
 
             }
@@ -56,7 +57,7 @@ pipeline {
             steps {
                 dir('db') {
                     script {
-                        docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}",
+                       dbImage = docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}",
                                 "--no-cache .")
                     }
                 }
@@ -64,6 +65,24 @@ pipeline {
         }
 
         stage('Docker: push') {
+            steps {
+                script {
+                    // @TODO - new artifactory server : docker-frontend.artifacts.dbccloud.dk
+                    if (currentBuild.resultIsBetterOrEqualTo('SUCCESS')) {
+                        docker.withRegistry('https://docker-frontend.artifacts.dbccloud.dk', 'docker') {
+                            wwwImage.push()
+                            if (BRANCH == "develop") {
+                                app.push("latest")
+                            }
+                            dbImage.push();
+                        }
+                    }
+                }
+
+            }
+        }
+
+       /* stage('Docker: push') {
             steps {
                 script {
                     def artyServer = Artifactory.server 'arty'
@@ -88,7 +107,7 @@ pipeline {
 
                 }
             }
-        }
+        }*/
         stage('docker cleanup'){
             steps{
                 script{
@@ -109,7 +128,7 @@ pipeline {
             steps {
                 sh """ echo FISK """
                 sh """ echo $BRANCH_NAME """
-                script {
+                /*script {
                     if (BRANCH == 'develop') {
                         build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop'
                     } else if (BRANCH == 'master') {
@@ -117,7 +136,7 @@ pipeline {
                     } else {
                         build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop', parameters: [string(name: 'deploybranch', value: BRANCH)]
                     }
-                }
+                }*/
             }
         }
     }
