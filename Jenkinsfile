@@ -72,7 +72,7 @@ pipeline {
                         docker.withRegistry('https://docker-frontend.artifacts.dbccloud.dk', 'docker') {
                             wwwImage.push()
                             if (BRANCH == "develop") {
-                                app.push("latest")
+                                wwwImage.push("latest")
                             }
                             dbImage.push();
                         }
