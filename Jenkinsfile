@@ -42,14 +42,14 @@ pipeline {
                     currentBuild.description = "Build ${BUILDNAME}:${currentBuild.number}"
                 }
 
-                    script {
-                        wwwImage = docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}",
+                script {
+                    wwwImage = docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}",
+                            "--build-arg BRANCH=${BRANCH_NAME} .")
+                    /*if (BRANCH == "develop"){
+                        docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest",
                                 "--build-arg BRANCH=${BRANCH_NAME} .")
-                        /*if (BRANCH == "develop"){
-                            docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest",
-                                    "--build-arg BRANCH=${BRANCH_NAME} .")
-                        }*/
-                    }
+                    }*/
+                }
 
             }
         }
@@ -57,7 +57,7 @@ pipeline {
             steps {
                 dir('db') {
                     script {
-                       dbImage = docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}",
+                        dbImage = docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}",
                                 "--no-cache .")
                     }
                 }
@@ -82,40 +82,40 @@ pipeline {
             }
         }
 
-       /* stage('Docker: push') {
+        /* stage('Docker: push') {
+             steps {
+                 script {
+                     def artyServer = Artifactory.server 'arty'
+                     def artyDocker = Artifactory.docker server: artyServer, host: env.DOCKER_HOST
+
+                     def buildInfo_www = Artifactory.newBuildInfo()
+                     buildInfo_www.name = BUILDNAME
+                     buildInfo_www = artyDocker.push("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}", 'docker-dscrum', buildInfo_www)
+                     buildInfo_www.env.capture = true
+                     buildInfo_www.env.collect()
+
+                     def buildInfo_db = Artifactory.newBuildInfo()
+                     buildInfo_db.name = BUILDNAME
+                     buildInfo_db = artyDocker.push("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}", 'docker-dscrum', buildInfo_db)
+
+                     buildInfo_www.append buildInfo_db
+                     artyServer.publishBuildInfo buildInfo_www
+
+                     if (BRANCH == "develop"){
+                         artyDocker.push("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest", 'docker-dscrum')
+                     }
+
+                 }
+             }
+         }*/
+        stage('docker cleanup') {
             steps {
                 script {
-                    def artyServer = Artifactory.server 'arty'
-                    def artyDocker = Artifactory.docker server: artyServer, host: env.DOCKER_HOST
-
-                    def buildInfo_www = Artifactory.newBuildInfo()
-                    buildInfo_www.name = BUILDNAME
-                    buildInfo_www = artyDocker.push("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}", 'docker-dscrum', buildInfo_www)
-                    buildInfo_www.env.capture = true
-                    buildInfo_www.env.collect()
-
-                    def buildInfo_db = Artifactory.newBuildInfo()
-                    buildInfo_db.name = BUILDNAME
-                    buildInfo_db = artyDocker.push("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}", 'docker-dscrum', buildInfo_db)
-
-                    buildInfo_www.append buildInfo_db
-                    artyServer.publishBuildInfo buildInfo_www
-
-                    if (BRANCH == "develop"){
-                        artyDocker.push("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest", 'docker-dscrum')
-                    }
-
-                }
-            }
-        }*/
-        stage('docker cleanup'){
-            steps{
-                script{
                     sh """
                     docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}
                     docker rmi ${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}
                     """
-                    if (BRANCH == "develop"){
+                    if (BRANCH == "develop") {
                         sh """
                         docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest
                         """
@@ -128,15 +128,16 @@ pipeline {
             steps {
                 sh """ echo FISK """
                 sh """ echo $BRANCH_NAME """
-                /*script {
-                    if (BRANCH == 'develop') {
-                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop'
-                    } else if (BRANCH == 'master') {
+                script {
+                    if (BRANCH_NAME == 'develop') {
+                        sh """echo HEST"""
+                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop', parameters: [string(name: 'buildnumber', value: $ { currentBuild.number })]
+                    } /*else if (BRANCH == 'master') {
                         build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/staging'
                     } else {
                         build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop', parameters: [string(name: 'deploybranch', value: BRANCH)]
-                    }
-                }*/
+                    }*/
+                }
             }
         }
     }
