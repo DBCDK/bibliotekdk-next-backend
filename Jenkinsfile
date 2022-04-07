@@ -105,6 +105,28 @@ pipeline {
             }
         }
 
+        // @TODO replace deploy with this one :
+        /*stage("Update staging version number") {
+            agent {
+                docker {
+                    label 'devel9-head'
+                    image "docker.dbc.dk/build-env"
+                    alwaysPull true
+                }
+            }
+            when {
+                branch "master"
+            }
+            steps {
+                dir("deploy") {
+                    sh """#!/usr/bin/env bash
+						set-new-version configuration.yaml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLAB_ID} ${env.DOCKER_TAG} -b staging
+					"""
+                }
+            }
+        }*/
+        // END TODO - when done
+
         stage('Deploy') {
             steps {
                 sh """ echo FISK """
