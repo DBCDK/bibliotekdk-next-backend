@@ -127,11 +127,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh """ echo FISK """
-                sh """ echo $BRANCH_NAME """
+                sh """ echo $BRANCH """
                 script {
-                    if (BRANCH_NAME == 'develop') {
+                    if (BRANCH == 'develop') {
                         sh """echo HEST"""
-                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop', parameters: [string(name: 'buildnumber', value: $ { currentBuild.number })]
+                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop', parameters: [string(name: 'buildnumber', value: "${currentBuild.number}")]
                     } /*else if (BRANCH == 'master') {
                         build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/staging'
                     } else {
