@@ -27,7 +27,7 @@ pipeline {
         // hmm why metascrum - well fix it later
         GITLAB_PRIVATE_TOKEN = credentials("metascrum-gitlab-api-token")
         // buildnumber
-        BUILDNUMBER = currentBuild.number
+        //BUILDNUMBER = currentBuild.number
     }
     triggers {
         gitlab(
