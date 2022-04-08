@@ -22,6 +22,12 @@ pipeline {
         BRANCH = BRANCH_NAME.replaceAll('feature/', '').replaceAll('_', '-')
         // artifactory buildname
         BUILDNAME = "Bibdk-backend :: ${BRANCH}"
+        // GITLAB id for deploy job (where to set the image(build) number
+        GITLABID = "708"
+        // hmm why metascrum - well fix it later
+        GITLAB_PRIVATE_TOKEN = credentials("metascrum-gitlab-api-token")
+        // buildnumber
+        BUILDNUMBER = currentBuild.number
     }
     triggers {
         gitlab(
@@ -45,10 +51,6 @@ pipeline {
                 script {
                     wwwImage = docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}",
                             "--build-arg BRANCH=${BRANCH_NAME} .")
-                    /*if (BRANCH == "develop"){
-                        docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest",
-                                "--build-arg BRANCH=${BRANCH_NAME} .")
-                    }*/
                 }
 
             }
@@ -82,32 +84,28 @@ pipeline {
             }
         }
 
-        /* stage('Docker: push') {
-             steps {
-                 script {
-                     def artyServer = Artifactory.server 'arty'
-                     def artyDocker = Artifactory.docker server: artyServer, host: env.DOCKER_HOST
+        stage("Update develop version number (deploy)") {
+            agent {
+                docker {
+                    label 'devel10-head'
+                    image "docker-dbc.artifacts.dbccloud.dk/build-env:latest"
+                    alwaysPull true
+                }
+            }
+            when {
+                branch "develop"
+            }
+            steps {
+                dir("deploy") {
+                    sh """#!/usr/bin/env bash
+						set-new-version drupal-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${env.BUILDNUMBER} -b develop
+                        set-new-version postgres-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${env.BUILDNUMBER} -b develop
+					"""
+                }
+            }
+        }
 
-                     def buildInfo_www = Artifactory.newBuildInfo()
-                     buildInfo_www.name = BUILDNAME
-                     buildInfo_www = artyDocker.push("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}", 'docker-dscrum', buildInfo_www)
-                     buildInfo_www.env.capture = true
-                     buildInfo_www.env.collect()
 
-                     def buildInfo_db = Artifactory.newBuildInfo()
-                     buildInfo_db.name = BUILDNAME
-                     buildInfo_db = artyDocker.push("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}", 'docker-dscrum', buildInfo_db)
-
-                     buildInfo_www.append buildInfo_db
-                     artyServer.publishBuildInfo buildInfo_www
-
-                     if (BRANCH == "develop"){
-                         artyDocker.push("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest", 'docker-dscrum')
-                     }
-
-                 }
-             }
-         }*/
         stage('docker cleanup') {
             steps {
                 script {
@@ -120,23 +118,6 @@ pipeline {
                         docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest
                         """
                     }
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                sh """ echo FISK """
-                sh """ echo $BRANCH """
-                script {
-                    if (BRANCH == 'develop') {
-                        sh """echo HEST"""
-                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop', parameters: [string(name: 'buildnumber', value: "${currentBuild.number}")]
-                    } /*else if (BRANCH == 'master') {
-                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/staging'
-                    } else {
-                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop', parameters: [string(name: 'deploybranch', value: BRANCH)]
-                    }*/
                 }
             }
         }
