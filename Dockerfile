@@ -1,6 +1,6 @@
 ARG BRANCH=master
 
-FROM docker-dbc.artifacts.dbccloud.dk/d8-php7-builder as builder
+FROM docker-frontend.artifacts.dbccloud.dk/d8-php7-builder as builder
 
 ARG BRANCH
 
