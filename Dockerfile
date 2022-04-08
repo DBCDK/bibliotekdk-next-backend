@@ -16,7 +16,7 @@ RUN apt-get update && \
 #ADD composer.lock ./www/
 #ADD composer.json ./www/
 #RUN chown -R jenkins:jenkins /var/lib/jenkins/www
-COPY www www
+ADD www www
 RUN chown -R jenkins:jenkins /var/lib/jenkins/www
 USER jenkins
 WORKDIR /var/lib/jenkins/www
@@ -24,7 +24,7 @@ RUN ls -la
 
 RUN composer install
 # get secrets from private gitlab
-RUN git clone gitlab@gitlab.dbc.dk:frontend/bibdk-backend.git && cd bibdk-backend && git checkout develop
+RUN git clone gitlab@gitlab.dbc.dk:frontend/bibdk-backend-settings.git && cd bibdk-backend-settings && git checkout develop
 
 FROM docker-dbc.artifacts.dbccloud.dk/dbc-apache-php7
 
@@ -46,10 +46,10 @@ COPY --from=builder /var/lib/jenkins/www /var/www
 
 RUN rm -rf change_branch.sh .editorconfig .gitattributes html
 
-COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/fqdn.conf /etc/apache2/conf-available/
-COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/000-default.conf /etc/apache2/sites-enabled/
-COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/settings.php /var/www/web/sites/default/
-COPY --from=builder /var/lib/jenkins/www/bibdk-backend/conf/.env /
+COPY --from=builder /var/lib/jenkins/www/bibdk-backend-settings/conf/fqdn.conf /etc/apache2/conf-available/
+COPY --from=builder /var/lib/jenkins/www/bibdk-backend-settings/conf/000-default.conf /etc/apache2/sites-enabled/
+COPY --from=builder /var/lib/jenkins/www/bibdk-backend-settings/conf/settings.php /var/www/web/sites/default/
+COPY --from=builder /var/lib/jenkins/www/bibdk-backend-settings/conf/.env /
 ADD --chown=www-data:www-data ["https://is.dbc.dk/view/frontend/job/bibliotekdk-next/job/Fetch%20bibdk-backend%20files/lastSuccessfulBuild/artifact/files.tar.gz", "/tmp/"]
 ADD script/run_dev_start.sh /
 ADD script/run_master_start.sh /
