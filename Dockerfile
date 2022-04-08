@@ -1,6 +1,6 @@
 ARG BRANCH=master
 
-FROM docker-dscrum.dbc.dk/d8-php7-builder as builder
+FROM docker-dbc.artifacts.dbccloud.dk/d8-php7-builder as builder
 
 ARG BRANCH
 
@@ -24,9 +24,9 @@ RUN ls -la
 
 RUN composer install
 # get secrets from private gitlab
-RUN git clone gitlab@gitlab.dbc.dk:d-scrum/d8/bibdk-backend.git && cd bibdk-backend && git checkout develop
+RUN git clone gitlab@gitlab.dbc.dk:frontend/bibdk-backend.git && cd bibdk-backend && git checkout develop
 
-FROM docker.dbc.dk/dbc-apache-php7
+FROM docker-dbc.artifacts.dbccloud.dk/dbc-apache-php7
 
 ENV NAMESPACE_NAME=frontend-features \
     APACHE_ROOT=/var/www/web \
