@@ -84,7 +84,7 @@ pipeline {
             }
         }
 
-        stage("Update develop version number (deploy)") {
+        stage("Update image (deploy)") {
             agent {
                 docker {
                     label 'devel10-head'
