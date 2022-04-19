@@ -1,7 +1,9 @@
 #! groovy
 @Library('pu-deploy')
+@Library('frontend-dscrum')
 
-def fisk = "JE"
+def wwwImage
+def dbImage
 
 pipeline {
     options {
@@ -20,6 +22,12 @@ pipeline {
         BRANCH = BRANCH_NAME.replaceAll('feature/', '').replaceAll('_', '-')
         // artifactory buildname
         BUILDNAME = "Bibdk-backend :: ${BRANCH}"
+        // GITLAB id for deploy job (where to set the image(build) number
+        GITLABID = "708"
+        // hmm why metascrum - well fix it later
+        GITLAB_PRIVATE_TOKEN = credentials("metascrum-gitlab-api-token")
+        // buildnumber
+        //BUILDNUMBER = currentBuild.number
     }
     triggers {
         gitlab(
@@ -40,14 +48,10 @@ pipeline {
                     currentBuild.description = "Build ${BUILDNAME}:${currentBuild.number}"
                 }
 
-                    script {
-                        docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}",
-                                "--build-arg BRANCH=${BRANCH_NAME} .")
-                        if (BRANCH == "develop"){
-                            docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest",
-                                    "--build-arg BRANCH=${BRANCH_NAME} .")
-                        }
-                    }
+                script {
+                    wwwImage = docker.build("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}",
+                            "--build-arg BRANCH=${BRANCH_NAME} .")
+                }
 
             }
         }
@@ -55,7 +59,7 @@ pipeline {
             steps {
                 dir('db') {
                     script {
-                        docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}",
+                        dbImage = docker.build("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}",
                                 "--no-cache .")
                     }
                 }
@@ -65,78 +69,54 @@ pipeline {
         stage('Docker: push') {
             steps {
                 script {
-                    def artyServer = Artifactory.server 'arty'
-                    def artyDocker = Artifactory.docker server: artyServer, host: env.DOCKER_HOST
-
-                    def buildInfo_www = Artifactory.newBuildInfo()
-                    buildInfo_www.name = BUILDNAME
-                    buildInfo_www = artyDocker.push("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}", 'docker-dscrum', buildInfo_www)
-                    buildInfo_www.env.capture = true
-                    buildInfo_www.env.collect()
-
-                    def buildInfo_db = Artifactory.newBuildInfo()
-                    buildInfo_db.name = BUILDNAME
-                    buildInfo_db = artyDocker.push("${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}", 'docker-dscrum', buildInfo_db)
-
-                    buildInfo_www.append buildInfo_db
-                    artyServer.publishBuildInfo buildInfo_www
-
-                    if (BRANCH == "develop"){
-                        artyDocker.push("${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest", 'docker-dscrum')
-                    }
-
-                }
-            }
-        }
-        stage('docker cleanup'){
-            steps{
-                script{
-                    sh """
-                    docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}
-                    docker rmi ${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}
-                    """
-                    if (BRANCH == "develop"){
-                        sh """
-                        docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest
-                        """
+                    // @TODO - new artifactory server : docker-frontend.artifacts.dbccloud.dk
+                    if (currentBuild.resultIsBetterOrEqualTo('SUCCESS')) {
+                        docker.withRegistry('https://docker-frontend.artifacts.dbccloud.dk', 'docker') {
+                            wwwImage.push()
+                            if (BRANCH == "develop") {
+                                wwwImage.push("latest")
+                            }
+                            dbImage.push();
+                        }
                     }
                 }
+
             }
         }
 
-        // @TODO replace deploy with this one :
-        /*stage("Update staging version number") {
+        stage("Update develop version number (deploy)") {
             agent {
                 docker {
-                    label 'devel9-head'
-                    image "docker.dbc.dk/build-env"
+                    label 'devel10-head'
+                    image "docker-dbc.artifacts.dbccloud.dk/build-env:latest"
                     alwaysPull true
                 }
             }
             when {
-                branch "master"
+                branch "develop"
             }
             steps {
                 dir("deploy") {
                     sh """#!/usr/bin/env bash
-						set-new-version configuration.yaml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLAB_ID} ${env.DOCKER_TAG} -b staging
+						set-new-version drupal-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b develop
+                        set-new-version postgres-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b develop
 					"""
                 }
             }
-        }*/
-        // END TODO - when done
+        }
 
-        stage('Deploy') {
+
+        stage('docker cleanup') {
             steps {
-                sh """ echo FISK """
-                sh """ echo $BRANCH_NAME """
                 script {
-                    if (BRANCH == 'develop') {
-                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop'
-                    } else if (BRANCH == 'master') {
-                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/staging'
-                    } else {
-                        build job: 'bibliotekdk-next/bibliotekdk-next-backend-deploy/develop', parameters: [string(name: 'deploybranch', value: BRANCH)]
+                    sh """
+                    docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:${currentBuild.number}
+                    docker rmi ${DOCKER_REPO}/${PRODUCT}-db-${BRANCH}:${currentBuild.number}
+                    """
+                    if (BRANCH == "develop") {
+                        sh """
+                        docker rmi ${DOCKER_REPO}/${PRODUCT}-www-${BRANCH}:latest
+                        """
                     }
                 }
             }
