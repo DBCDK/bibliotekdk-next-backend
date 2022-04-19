@@ -98,8 +98,8 @@ pipeline {
             steps {
                 dir("deploy") {
                     sh """#!/usr/bin/env bash
-						set-new-version drupal-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${env.BUILDNUMBER} -b develop
-                        set-new-version postgres-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${env.BUILDNUMBER} -b develop
+						set-new-version drupal-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b develop
+                        set-new-version postgres-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b develop
 					"""
                 }
             }
