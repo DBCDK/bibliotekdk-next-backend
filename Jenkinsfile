@@ -13,7 +13,7 @@ pipeline {
     }
     environment {
         // general vars
-        DOCKER_REPO = "docker-dscrum.dbc.dk"
+        DOCKER_REPO = "docker-frontend.artifacts.dbccloud.dk"
         // product name
         PRODUCT = 'bibdk-backend'
         // branch name to use in build
