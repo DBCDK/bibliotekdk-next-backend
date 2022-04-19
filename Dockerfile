@@ -24,7 +24,7 @@ RUN ls -la
 
 RUN composer install
 # get secrets from private gitlab
-RUN git clone gitlab@gitlab.dbc.dk:d-scrum/d8/bibdk-backend.git && cd bibdk-backend && git checkout develop
+RUN git clone gitlab@gitlab.dbc.dk:frontend/bibdk-backend-settings.git && cd bibdk-backend-settings && git checkout develop
 
 FROM docker-dbc.artifacts.dbccloud.dk/dbc-apache-php7
 
