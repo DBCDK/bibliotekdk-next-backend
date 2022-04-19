@@ -5,13 +5,13 @@
 def wwwImage
 def dbImage
 
-def checkBranch(){
-    script {
-        if (BRANCH_NAME === master) {
+def checkBranch(Branch){
+
+        if (Branch === master) {
             return "staging"
         }
-        return BRANCH_NAME
-    }
+        return Branch
+
 }
 
 pipeline {
@@ -36,7 +36,7 @@ pipeline {
         // hmm why metascrum - well fix it later
         GITLAB_PRIVATE_TOKEN = credentials("metascrum-gitlab-api-token")
         // which deploy branch
-        BRANCH_TO_UPDATE = checkBranch()
+        BRANCH_TO_UPDATE = checkBranch(BRANCH)
     }
     triggers {
         gitlab(
