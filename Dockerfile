@@ -1,4 +1,4 @@
-ARG BRANCH=master
+ARG BRANCH=develop
 
 FROM docker-frontend.artifacts.dbccloud.dk/d8-php7-builder as builder
 
