@@ -104,9 +104,9 @@ pipeline {
             // @TODO switch on branches here .. like script {sh ''' if(branch === "develop") ''' .. etc
 
             steps {
-
-                dir("deploy") {
-                    sh """
+                script {
+                    dir("deploy") {
+                        sh """
                         #!/usr/bin/env bash
 						set-new-version drupal-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b ${env.BRANCH_TO_UPDATE}
                        """
@@ -116,6 +116,7 @@ pipeline {
                             set-new-version postgres-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b ${env.BRANCH_TO_UPDATE}
         					"""
                         }
+                    }
                 }
             }
         }
