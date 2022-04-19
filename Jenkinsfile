@@ -74,9 +74,9 @@ pipeline {
                         docker.withRegistry('https://docker-frontend.artifacts.dbccloud.dk', 'docker') {
                             wwwImage.push()
                             if (BRANCH == "develop") {
+                                dbImage.push();
                                 wwwImage.push("latest")
                             }
-                            dbImage.push();
                         }
                     }
                 }
@@ -98,8 +98,8 @@ pipeline {
             steps {
                 dir("deploy") {
                     sh """#!/usr/bin/env bash
-						set-new-version drupal-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b develop
-                        set-new-version postgres-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b develop
+						set-new-version drupal-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b ${env.BRANCH}
+                        set-new-version postgres-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b ${env.BRANCH}
 					"""
                 }
             }
