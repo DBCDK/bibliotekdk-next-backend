@@ -6,10 +6,12 @@ def wwwImage
 def dbImage
 
 def checkBranch(){
-    if(BRANCH_NAME === master){
-        return "staging"
+    script {
+        if (BRANCH_NAME === master) {
+            return "staging"
+        }
+        return BRANCH_NAME
     }
-    return BRANCH_NAME
 }
 
 pipeline {
