@@ -5,6 +5,13 @@
 def wwwImage
 def dbImage
 
+def checkBranch(){
+    if(${BRANCH} === master){
+        return "staging"
+    }
+    return ${BRANCH}
+}
+
 pipeline {
     options {
         buildDiscarder(logRotator(artifactDaysToKeepStr: "", artifactNumToKeepStr: "", daysToKeepStr: "", numToKeepStr: "5"))
@@ -26,8 +33,8 @@ pipeline {
         GITLABID = "708"
         // hmm why metascrum - well fix it later
         GITLAB_PRIVATE_TOKEN = credentials("metascrum-gitlab-api-token")
-        // buildnumber
-        //BUILDNUMBER = currentBuild.number
+        // which deploy branch
+        BRANCH_TO_UPDATE = checkBranch()
     }
     triggers {
         gitlab(
@@ -98,8 +105,8 @@ pipeline {
             steps {
                 dir("deploy") {
                     sh """#!/usr/bin/env bash
-						set-new-version drupal-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b ${env.BRANCH}
-                        set-new-version postgres-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b ${env.BRANCH}
+						set-new-version drupal-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b ${env.BRANCH_TO_UPDATE}
+                        set-new-version postgres-deployment-ready.yml ${env.GITLAB_PRIVATE_TOKEN} ${env.GITLABID} ${currentBuild.number} -b ${env.BRANCH_TO_UPDATE}
 					"""
                 }
             }
