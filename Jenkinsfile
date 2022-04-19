@@ -7,7 +7,7 @@ def dbImage
 
 def checkBranch(Branch){
 
-        if (Branch === "master") {
+        if (Branch == "master") {
             return "staging"
         }
         return Branch
