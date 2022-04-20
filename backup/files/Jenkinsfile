@@ -3,9 +3,9 @@
 pipeline {
     agent {
         docker {
-            image "docker.dbc.dk/k8s-deploy-env:latest"
+            image "docker-dbc.artifacts.dbccloud.dk/k8s-deploy-env:latest"
             alwaysPull true
-            label 'devel9'
+            label 'devel10'
         }
     }
     options {
