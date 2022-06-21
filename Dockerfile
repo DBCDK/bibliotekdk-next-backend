@@ -28,7 +28,7 @@ RUN git clone gitlab@gitlab.dbc.dk:frontend/bibdk-backend-settings.git && cd bib
 
 FROM docker-dbc.artifacts.dbccloud.dk/dbc-apache-php7
 
-ENV NAMESPACE_NAME=frontend-staging \
+ENV NAMESPACE_NAME=febib-staging \
     APACHE_ROOT=/var/www/web \
     APACHE_RUN_DIR=/var/run/apache2 \
     APACHE_SERVER_NAME=bibdk-backend-www-${BRANCH}.${NAMESPACE_NAME}.svc.cloud.dbc.dk \

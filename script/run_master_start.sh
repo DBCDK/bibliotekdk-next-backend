@@ -4,7 +4,7 @@
 
 # get files from prod if in staging namespace
 cd /tmp || return
-if [ "$NAMESPACE_NAME" == 'frontend-staging' ]; then
+if [ "$NAMESPACE_NAME" == 'febib-staging' ]; then
   # Fetch the files folder from prod.
   tar -xf files.tar.gz
   rm -rf /var/www/web/sites/default/files/*
