@@ -26,7 +26,7 @@ pipeline {
                         sh """
                         mkdir files
                         POD=\$(kubectl -n febib-prod get pod -l app=bibdk-backend-www-master -o jsonpath="{.items[0].metadata.name}")
-                        kubectl -n frontend-prod cp \${POD}:/var/www/web/sites/default/files files
+                        kubectl -n febib-prod cp \${POD}:/var/www/web/sites/default/files files
                         tar zcf files.tar.gz files
                         rm -rf files
                         """
