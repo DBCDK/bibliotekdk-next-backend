@@ -22,10 +22,10 @@ pipeline {
         stage('Fetch from k8s and archive it') {
             steps {
                 script {
-                    withCredentials([file(credentialsId: 'kubecert-frontend', variable: 'KUBECONFIG')]) {
+                    withCredentials([file(credentialsId: 'kubecert-febib', variable: 'KUBECONFIG')]) {
                         sh """
                         mkdir files
-                        POD=\$(kubectl -n frontend-prod get pod -l app=bibdk-backend-www-master -o jsonpath="{.items[0].metadata.name}")
+                        POD=\$(kubectl -n febib-prod get pod -l app=bibdk-backend-www-master -o jsonpath="{.items[0].metadata.name}")
                         kubectl -n frontend-prod cp \${POD}:/var/www/web/sites/default/files files
                         tar zcf files.tar.gz files
                         rm -rf files
