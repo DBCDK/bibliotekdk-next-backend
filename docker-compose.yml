@@ -1,7 +1,7 @@
 version: '3'
 services:
   drupal8:
-    image: docker-dscrum.dbc.dk/bibdk-backend-www-develop
+    image: docker-frontend.artifacts.dbccloud.dk/bibdk-backend-www-develop:latest
     ports:
       - 7070:80
     restart: always
