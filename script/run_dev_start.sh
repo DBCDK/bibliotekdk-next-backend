@@ -4,7 +4,7 @@
 # database settings
 echo $NAMESPACE_NAME
 cd /tmp || return
-if [ "$NAMESPACE_NAME" == 'frontend-staging' ]; then
+if [ "$NAMESPACE_NAME" == 'febib-staging' ]; then
   #We do not need to include the files.tar.gz file.
   rm -rf files.tar.gz
 else
