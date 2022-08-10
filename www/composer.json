@@ -31,8 +31,7 @@
         "drupal/log_stdout": "^1.1",
         "drupal/memcache": "^2.0",
         "drush/drush": "^10.2",
-        "symfony/polyfill-php72": "^1.17",
-        "drupal/onlyone": "^1.10"
+        "symfony/polyfill-php72": "^1.17"
     },
     "conflict": {
         "drupal/drupal": "*"
