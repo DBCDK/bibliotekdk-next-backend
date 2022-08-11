@@ -1,6 +1,5 @@
 #! groovy
 @Library('pu-deploy')
-//@Library('frontend-dscrum')
 
 def wwwImage
 def dbImage
