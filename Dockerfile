@@ -26,7 +26,7 @@ RUN composer install
 # get secrets from private gitlab
 RUN git clone gitlab@gitlab.dbc.dk:frontend/bibdk-backend-settings.git && cd bibdk-backend-settings && git checkout develop
 
-FROM docker-dbc.artifacts.dbccloud.dk/dbc-apache-php7:old-202231
+FROM docker-dbc.artifacts.dbccloud.dk/dbc-apache-php7
 
 ENV NAMESPACE_NAME=frontend-features \
     APACHE_ROOT=/var/www/web \
