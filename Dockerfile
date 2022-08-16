@@ -56,5 +56,6 @@ ADD script/run_master_start.sh /
 ADD script/config_memcache.sh /
 
 RUN mkdir ${APACHE_ROOT}/sites/default/files
+RUN mkdir ${APACHE_ROOT}/sites/default/files/config_bibdk
 RUN chown -R www-data:www-data /var/www/web
 RUN chmod -R 775 ${APACHE_ROOT}/sites/default/files
