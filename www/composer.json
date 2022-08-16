@@ -30,7 +30,7 @@
         "drupal/core-recommended": "^9.4",
         "drupal/admin_absolute_image_url": "dev-master",
         "drupal/export_translations": "dev-master",
-        "drupal/graphql": "^3.0",
+        "drupal/graphql": "^3.1",
         "drupal/log_stdout": "^1.1",
         "drupal/memcache": "^2.0",
         "drush/drush": "^10.2"
