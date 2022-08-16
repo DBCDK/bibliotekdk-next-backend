@@ -16,7 +16,11 @@
         {
             "type": "git",
             "url": "gitlab@gitlab.dbc.dk:d-scrum/d8/modules/export-translations"
-        }	
+        },
+        {
+            "type": "git",
+            "url": "gitlab@gitlab.dbc.dk:d-scrum/d8/modules/editor_absolute_image_url"
+        }
     ],
     "require": {
         "composer/installers": "^1.9",
@@ -24,6 +28,7 @@
         "drupal/core-composer-scaffold": "^9.4",
         "drupal/core-project-message": "^9.4",
         "drupal/core-recommended": "^9.4",
+        "drupal/editor_absolute_image_url": "dev-master",
         "drupal/export_translations": "dev-master",
         "drupal/graphql": "^3.0",
         "drupal/log_stdout": "^1.1",
