@@ -1,6 +1,6 @@
 {
     "name": "drupal/recommended-project",
-    "description": "Project template for Drupal 8 projects with a relocated document root",
+    "description": "Project template for Drupal 9 projects with a relocated document root",
     "type": "project",
     "license": "GPL-2.0-or-later",
     "homepage": "https://www.drupal.org/project/drupal",
@@ -16,31 +16,33 @@
         {
             "type": "git",
             "url": "gitlab@gitlab.dbc.dk:d-scrum/d8/modules/export-translations"
+        },
+        {
+            "type": "git",
+            "url": "gitlab@gitlab.dbc.dk:d-scrum/d8/modules/admin_absolute_image_url"
         }
     ],
     "require": {
-        "composer/installers": "^1.2",
-        "drupal/console": "^1.0.2",
-        "drupal/core": "^8.9.2",
-        "drupal/core-composer-scaffold": "^8.8",
-        "drupal/core-project-message": "^8.8",
-        "drupal/core-recommended": "^8.9.2",
-        "drupal/editor_absolute_image_url": "^1.0",
+        "composer/installers": "^1.9",
+        "drupal/console": "~1.0",
+        "drupal/core-composer-scaffold": "^9.4",
+        "drupal/core-project-message": "^9.4",
+        "drupal/core-recommended": "^9.4",
+        "drupal/admin_absolute_image_url": "dev-master",
         "drupal/export_translations": "dev-master",
-        "drupal/graphql": "^3.0",
+        "drupal/graphql": "^3.1",
         "drupal/log_stdout": "^1.1",
         "drupal/memcache": "^2.0",
-        "drush/drush": "^10.2",
-        "symfony/polyfill-php72": "^1.17"
+        "drush/drush": "^10.2"
     },
     "conflict": {
         "drupal/drupal": "*"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "config": {
-        "sort-packages": true,
-        "allow-plugins": true
+        "allow-plugins": true,
+        "sort-packages": true
     },
     "extra": {
         "drupal-scaffold": {
@@ -69,6 +71,9 @@
             ],
             "web/modules/custom/{$name}": [
                 "type:drupal-custom-module"
+            ],
+            "web/profiles/custom/{$name}": [
+                "type:drupal-custom-profile"
             ],
             "web/themes/custom/{$name}": [
                 "type:drupal-custom-theme"
