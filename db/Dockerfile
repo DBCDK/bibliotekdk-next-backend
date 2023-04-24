@@ -1,4 +1,4 @@
-FROM docker-dbc.artifacts.dbccloud.dk/dbc-postgres
+FROM docker-dbc.artifacts.dbccloud.dk/dbc-postgres-base-14
 
 # Environment settings: Read setup from configmap
 ENV POSTGRES_USER=filestore
