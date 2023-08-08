@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # get code from latest develop image
-docker run -d  --name backend_temp docker-dscrum.dbc.dk/bibdk-backend-www-develop
+docker run -d  --name backend_temp docker-frontend.artifacts.dbccloud.dk/bibdk-backend-www-develop
 
 docker exec -it backend_temp /bin/bash -c "cd /var/www/web/sites/default && ls -la"
 # copy vcs files
