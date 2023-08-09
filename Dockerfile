@@ -22,7 +22,7 @@ USER jenkins
 WORKDIR /var/lib/jenkins/www
 RUN ls -la
 
-RUN composer install
+RUN composer up
 # get secrets from private gitlab
 RUN git clone gitlab@gitlab.dbc.dk:frontend/bibdk-backend-settings.git && cd bibdk-backend-settings && git checkout master
 
