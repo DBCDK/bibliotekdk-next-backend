@@ -30,6 +30,8 @@ RUN git clone gitlab@gitlab.dbc.dk:frontend/bibdk-backend-settings.git && cd bib
 
 FROM docker-dbc.artifacts.dbccloud.dk/dbc-apache-php8:latest
 
+USER root
+
 ENV NAMESPACE_NAME=frontend-features \
     APACHE_ROOT=/var/www/web \
     APACHE_RUN_DIR=/var/run/apache2 \
