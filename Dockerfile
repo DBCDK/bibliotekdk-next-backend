@@ -39,7 +39,6 @@ ENV NAMESPACE_NAME=frontend-features \
 
 RUN apt-get update && \
 	apt-get -q -y install php-intl php-soap postgresql-client composer && \
-	rm -rf /var/lib/apt/lists/* && \
 	apt-get autoremove -y && \
 	a2enmod rewrite headers cache_disk
 
