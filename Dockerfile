@@ -6,6 +6,7 @@ ARG BRANCH
 
 ENV BRANCH=${BRANCH}
 
+USER root
 WORKDIR /var/lib/jenkins
 RUN apt-key adv --fetch-keys https://packages.sury.org/php/apt.gpg
 
@@ -27,7 +28,7 @@ RUN composer up
 # get secrets from private gitlab
 RUN git clone gitlab@gitlab.dbc.dk:frontend/bibdk-backend-settings.git && cd bibdk-backend-settings && git checkout master
 
-FROM docker-dbc.artifacts.dbccloud.dk/dbc-apache-php7
+FROM docker-dbc.artifacts.dbccloud.dk/dbc-apache-php8:latest
 
 ENV NAMESPACE_NAME=frontend-features \
     APACHE_ROOT=/var/www/web \
