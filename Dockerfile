@@ -12,7 +12,6 @@ RUN apt-key adv --fetch-keys https://packages.sury.org/php/apt.gpg
 
 RUN apt-get update && \
     apt-get -q -y install php-intl php-soap git ssh unzip && \
-   	rm -rf /var/lib/apt/lists/* && \
     apt-get autoremove -y
 
 #ADD composer.lock ./www/
@@ -22,6 +21,7 @@ ADD www www
 RUN chown -R jenkins:jenkins /var/lib/jenkins/www
 USER jenkins
 WORKDIR /var/lib/jenkins/www
+RUN ls -la /var/lib/
 RUN ls -la
 
 RUN composer up
