@@ -41,6 +41,12 @@ pipeline {
         node { label 'devel10-head' }
     }
     stages {
+        stage('clean workspace') {
+            steps {
+                cleanWs()
+                checkout scm
+            }
+        }
         // Build the Drupal website image.
         stage('Docker www') {
             steps {
