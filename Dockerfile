@@ -1,12 +1,13 @@
 ARG BRANCH=develop
 
-FROM docker-frontend.artifacts.dbccloud.dk/d8-php7-builder as builder
+FROM docker-frontend.artifacts.dbccloud.dk/d9-php8-builder as builder
 
 ARG BRANCH
 
 ENV BRANCH=${BRANCH}
 
 WORKDIR /var/lib/jenkins
+RUN apt-key adv --fetch-keys https://packages.sury.org/php/apt.gpg
 
 RUN apt-get update && \
     apt-get -q -y install php-intl php-soap git ssh unzip && \
