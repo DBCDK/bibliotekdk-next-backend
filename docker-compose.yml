@@ -3,11 +3,14 @@ services:
   drupal8:
     image: docker-frontend.artifacts.dbccloud.dk/bibdk-backend-www-develop
     ports:
-      - 7070:80
+      - 7070:8080
     restart: always
     environment:
-      POSTGRES_HOST: pg_db
-      NAMESPACE_NAME: develop
+      POSTGRES_HOST: XXXX
+      NAMESPACE_NAME: XXXX
+      POSTGRES_USER: XXXX
+      POSTGRES_PASSWORD: XXXX
+      POSTGRES_DB: XXXX
     command:
       /bin/bash -c ". /run_dev_start.sh && . /entrypoint.sh"
     depends_on:
