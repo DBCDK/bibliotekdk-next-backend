@@ -1,6 +1,6 @@
 {
     "name": "drupal/recommended-project",
-    "description": "Project template for Drupal projects with a relocated document root",
+    "description": "Project template for Drupal 9 projects with a relocated document root",
     "type": "project",
     "license": "GPL-2.0-or-later",
     "homepage": "https://www.drupal.org/project/drupal",
@@ -12,13 +12,28 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "git",
+            "url": "gitlab@gitlab.dbc.dk:d-scrum/d8/modules/export-translations"
+        },
+        {
+            "type": "git",
+            "url": "gitlab@gitlab.dbc.dk:d-scrum/d8/modules/admin_absolute_image_url"
         }
     ],
     "require": {
-        "composer/installers": "^2.0",
-        "drupal/core-composer-scaffold": "^10.0",
-        "drupal/core-project-message": "^10.0",
-        "drupal/core-recommended": "^10.0"
+        "composer/installers": "^1.9",
+        "drupal/console": "~1.0",
+        "drupal/core-composer-scaffold": "^9.4",
+        "drupal/core-project-message": "^9.4",
+        "drupal/core-recommended": "^9.4",
+        "drupal/admin_absolute_image_url": "dev-master",
+        "drupal/export_translations": "dev-master",
+        "drupal/graphql": "^3.1",
+        "drupal/log_stdout": "^1.1",
+        "drupal/memcache": "^2.0",
+        "drush/drush": "^10.2"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -26,13 +41,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "config": {
-        "allow-plugins": {
-            "composer/installers": true,
-            "drupal/core-composer-scaffold": true,
-            "drupal/core-project-message": true,
-            "phpstan/extension-installer": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        },
+        "allow-plugins": true,
         "sort-packages": true
     },
     "extra": {
@@ -82,7 +91,7 @@
                 "<bg=blue;fg=white>                                                         </>",
                 "",
                 "<bg=yellow;fg=black>Next steps</>:",
-                "  * Install the site: https://www.drupal.org/docs/installing-drupal",
+                "  * Install the site: https://www.drupal.org/docs/8/install",
                 "  * Read the user guide: https://www.drupal.org/docs/user_guide/en/index.html",
                 "  * Get support: https://www.drupal.org/support",
                 "  * Get involved with the Drupal community:",

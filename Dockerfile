@@ -1,6 +1,5 @@
-ARG BRANCH=develop
 FROM docker-frontend.artifacts.dbccloud.dk/d9-php8-builder:latest as builder
-ENV BRANCH=${BRANCH}
+ENV BRANCH=develop
 ENV DEBIAN_FRONTEND=noninteractive
 
 USER root
@@ -25,7 +24,7 @@ RUN ls -la
 
 RUN composer update --no-dev --with-dependencies
 # get secrets from private gitlab
-RUN git clone gitlab@gitlab.dbc.dk:frontend/bibdk-backend-settings.git && cd bibdk-backend-settings && git checkout ${BRANCH}
+RUN git clone gitlab@gitlab.dbc.dk:frontend/bibdk-backend-settings.git && cd bibdk-backend-settings && git checkout develop
 
 FROM docker-dbc.artifacts.dbccloud.dk/dbc-apache-php8
 
